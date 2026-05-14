@@ -9,13 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NoticesRouteImport } from './routes/notices'
 import { Route as MapRouteImport } from './routes/map'
+import { Route as LiveStatusRouteImport } from './routes/live-status'
 import { Route as DirectoryRouteImport } from './routes/directory'
 import { Route as IndexRouteImport } from './routes/index'
 
+const NoticesRoute = NoticesRouteImport.update({
+  id: '/notices',
+  path: '/notices',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MapRoute = MapRouteImport.update({
   id: '/map',
   path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveStatusRoute = LiveStatusRouteImport.update({
+  id: '/live-status',
+  path: '/live-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DirectoryRoute = DirectoryRouteImport.update({
@@ -32,40 +44,62 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/directory': typeof DirectoryRoute
+  '/live-status': typeof LiveStatusRoute
   '/map': typeof MapRoute
+  '/notices': typeof NoticesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/directory': typeof DirectoryRoute
+  '/live-status': typeof LiveStatusRoute
   '/map': typeof MapRoute
+  '/notices': typeof NoticesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/directory': typeof DirectoryRoute
+  '/live-status': typeof LiveStatusRoute
   '/map': typeof MapRoute
+  '/notices': typeof NoticesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/directory' | '/map'
+  fullPaths: '/' | '/directory' | '/live-status' | '/map' | '/notices'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/directory' | '/map'
-  id: '__root__' | '/' | '/directory' | '/map'
+  to: '/' | '/directory' | '/live-status' | '/map' | '/notices'
+  id: '__root__' | '/' | '/directory' | '/live-status' | '/map' | '/notices'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DirectoryRoute: typeof DirectoryRoute
+  LiveStatusRoute: typeof LiveStatusRoute
   MapRoute: typeof MapRoute
+  NoticesRoute: typeof NoticesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/notices': {
+      id: '/notices'
+      path: '/notices'
+      fullPath: '/notices'
+      preLoaderRoute: typeof NoticesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/map': {
       id: '/map'
       path: '/map'
       fullPath: '/map'
       preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live-status': {
+      id: '/live-status'
+      path: '/live-status'
+      fullPath: '/live-status'
+      preLoaderRoute: typeof LiveStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/directory': {
@@ -88,8 +122,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DirectoryRoute: DirectoryRoute,
+  LiveStatusRoute: LiveStatusRoute,
   MapRoute: MapRoute,
+  NoticesRoute: NoticesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
