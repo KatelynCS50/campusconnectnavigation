@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   Search,
   User,
@@ -11,61 +12,21 @@ import {
   ArrowRight,
 } from "lucide-react";
 import libraryKiosk from "@/assets/library-kiosk.jpg";
+import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function Logo({ className = "" }: { className?: string }) {
-  return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <div className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-primary-foreground">
-        <MapPin className="h-4 w-4" strokeWidth={2.5} />
-      </div>
-      <span className="text-lg font-bold tracking-tight text-foreground">
-        CampusConnect
-      </span>
-    </div>
-  );
-}
-
-function Nav() {
-  const links = [
-    { label: "Home", href: "/", active: true },
-    { label: "Map", href: "/" },
-    { label: "Live Status", href: "/" },
-    { label: "Notices", href: "/" },
-  ];
-  return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-[var(--hero)]/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Logo />
-        <nav className="hidden items-center gap-10 md:flex">
-          {links.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              className="relative py-1 text-sm font-medium text-foreground/80 transition hover:text-foreground"
-            >
-              {l.label}
-              {l.active && (
-                <span className="absolute -bottom-0.5 left-0 right-0 mx-auto h-[2px] w-6 rounded-full bg-primary" />
-              )}
-            </a>
-          ))}
-        </nav>
-        <button
-          aria-label="Account"
-          className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-soft)]"
-        >
-          <User className="h-4 w-4 text-foreground/70" />
-        </button>
-      </div>
-    </header>
-  );
-}
-
 function Hero() {
+  const navigate = useNavigate();
+  const [q, setQ] = useState("");
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate({ to: "/directory" });
+  };
+
   return (
     <section className="relative bg-[var(--hero)] pb-24 pt-16 md:pb-32 md:pt-24">
       <div className="mx-auto max-w-5xl px-6 text-center">
@@ -82,22 +43,25 @@ function Hero() {
           effortless precision.
         </p>
 
-        {/* Search */}
-        <div className="mx-auto mt-10 max-w-2xl">
+        <form onSubmit={submit} className="mx-auto mt-10 max-w-2xl">
           <div className="group flex items-center gap-2 rounded-full border border-border bg-card p-2 pl-6 shadow-[var(--shadow-glow)] transition focus-within:shadow-[0_0_0_10px_oklch(0.36_0.13_258/0.08),0_16px_50px_-8px_oklch(0.36_0.13_258/0.25)]">
             <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
             <input
               type="text"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
               placeholder="Search teacher or student name"
               className="flex-1 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground md:text-base"
             />
-            <button className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-95">
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-95"
+            >
               SEARCH
             </button>
           </div>
-        </div>
+        </form>
 
-        {/* Bento */}
         <BentoGrid />
       </div>
     </section>
@@ -107,8 +71,10 @@ function Hero() {
 function BentoGrid() {
   return (
     <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-5 text-left md:grid-cols-3">
-      {/* Live Status anchor — spans 2 rows on left */}
-      <article className="md:row-span-2 relative overflow-hidden rounded-3xl border border-border bg-[var(--emerald)] p-8 text-[color:var(--emerald-foreground)] shadow-[var(--shadow-soft)]">
+      <Link
+        to="/directory"
+        className="md:row-span-2 relative overflow-hidden rounded-3xl border border-border bg-[var(--emerald)] p-8 text-[color:var(--emerald-foreground)] shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5"
+      >
         <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
         <div className="relative flex h-full flex-col">
           <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider opacity-90">
@@ -126,20 +92,21 @@ function BentoGrid() {
             View live board <ArrowRight className="h-4 w-4" />
           </div>
         </div>
-      </article>
+      </Link>
 
       <FeatureCard
+        to="/directory"
         icon={<User className="h-5 w-5" />}
         title="Find Teacher"
         body="Locate any faculty member instantly with smart presence detection."
       />
       <FeatureCard
+        to="/map"
         icon={<MapIcon className="h-5 w-5" />}
         title="Campus Map"
-        body="Interactive 2D navigation across all building floors."
+        body="Interactive 2D and 3D navigation across all building floors."
       />
 
-      {/* Wide notices card spans both right columns */}
       <article className="md:col-span-2 relative overflow-hidden rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-card)]">
         <div className="flex items-start gap-5">
           <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
@@ -168,21 +135,24 @@ function FeatureCard({
   icon,
   title,
   body,
+  to,
 }: {
   icon: React.ReactNode;
   title: string;
   body: string;
+  to: "/directory" | "/map";
 }) {
   return (
-    <article className="group rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]">
+    <Link
+      to={to}
+      className="group rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]"
+    >
       <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary">
         {icon}
       </div>
       <h3 className="mt-6 text-lg font-semibold">{title}</h3>
-      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-        {body}
-      </p>
-    </article>
+      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{body}</p>
+    </Link>
   );
 }
 
@@ -239,7 +209,6 @@ function Precision() {
             />
           </div>
 
-          {/* Floating status pill */}
           <div className="absolute left-6 top-6 flex items-center gap-3 rounded-2xl border border-border bg-card/95 px-4 py-3 shadow-[var(--shadow-soft)] backdrop-blur md:left-8 md:top-8">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-[var(--emerald)] text-[color:var(--emerald-foreground)]">
               <MapPin className="h-4 w-4" />
@@ -258,65 +227,13 @@ function Precision() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="border-t border-border bg-[var(--hero)]">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-16 md:grid-cols-2">
-        <div className="max-w-md">
-          <Logo />
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Bridging the gap between academia and student life through
-            intelligent navigation.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-10">
-          <FooterCol
-            title="Navigation"
-            items={["Find Teacher", "Campus Map", "Live Status"]}
-          />
-          <FooterCol
-            title="Support"
-            items={["Help Centre", "Privacy Policy", "Terms of Service"]}
-          />
-        </div>
-      </div>
-      <div className="border-t border-border/70">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-6 py-6 text-xs text-muted-foreground md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} CampusConnect. All rights reserved.</p>
-          <p>Crafted for modern campuses.</p>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-function FooterCol({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div>
-      <h4 className="text-sm font-semibold text-foreground">{title}</h4>
-      <ul className="mt-4 space-y-3">
-        {items.map((i) => (
-          <li key={i}>
-            <a
-              href="#"
-              className="text-sm text-muted-foreground transition hover:text-foreground"
-            >
-              {i}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 function Index() {
   return (
     <main className="min-h-screen bg-background">
-      <Nav />
+      <SiteNav />
       <Hero />
       <Precision />
-      <Footer />
+      <SiteFooter />
     </main>
   );
 }
