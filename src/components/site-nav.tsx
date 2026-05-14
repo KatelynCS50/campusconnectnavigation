@@ -19,7 +19,8 @@ export function SiteNav() {
     { label: "Home", to: "/" as const },
     { label: "Directory", to: "/directory" as const },
     { label: "Map", to: "/map" as const },
-    { label: "Live Status", to: "/directory" as const },
+    { label: "Live Status", to: "/live-status" as const },
+    { label: "Notices", to: "/notices" as const },
   ];
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-[var(--hero)]/85 backdrop-blur-md">
