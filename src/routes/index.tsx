@@ -217,7 +217,7 @@ function Precision() {
               <p className="text-sm font-semibold">Library</p>
               <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--emerald)]" />
-                85% Available
+                Closed for maintenance
               </p>
             </div>
           </div>
