@@ -45,10 +45,10 @@ const faculty: Person[] = [
 ];
 
 const resources = [
-  { name: "Central Library", availability: 85, note: "Quiet zones open" },
-  { name: "Student Cafeteria", availability: 42, note: "Moderate crowd" },
-  { name: "Engineering Lab 3", availability: 95, note: "Sensors idle" },
-];
+  { name: "Central Library", open: false, note: "Closed for maintenance" },
+  { name: "Student Cafeteria", open: true, note: "Serving lunch until 3 PM" },
+  { name: "Engineering Lab 3", open: true, note: "All stations available" },
+] as const;
 
 function statusBadge(status: Status) {
   switch (status) {
@@ -222,21 +222,23 @@ function LiveStatusPage() {
                   <h3 className="text-base font-semibold text-foreground">{r.name}</h3>
                   <Activity className="h-4 w-4 text-primary" />
                 </div>
-                <div className="mt-5 flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold tracking-tight text-foreground">
-                    {r.availability}%
-                  </span>
-                  <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                    Available
+                <div className="mt-5 flex items-center gap-3">
+                  <span
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-widest ${
+                      r.open
+                        ? "bg-[var(--emerald)]/15 text-[oklch(0.42_0.16_155)]"
+                        : "bg-destructive/10 text-destructive"
+                    }`}
+                  >
+                    <span
+                      className={`h-2 w-2 rounded-full ${
+                        r.open ? "bg-[var(--emerald)]" : "bg-destructive"
+                      }`}
+                    />
+                    {r.open ? "Open" : "Closed"}
                   </span>
                 </div>
-                <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-                  <div
-                    className="h-full rounded-full bg-primary"
-                    style={{ width: `${r.availability}%` }}
-                  />
-                </div>
-                <p className="mt-3 text-xs font-medium text-muted-foreground">{r.note}</p>
+                <p className="mt-4 text-xs font-medium text-muted-foreground">{r.note}</p>
               </div>
             ))}
           </div>
