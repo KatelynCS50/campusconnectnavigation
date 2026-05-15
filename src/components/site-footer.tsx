@@ -1,15 +1,21 @@
+import { Link } from "@tanstack/react-router";
 import { Logo } from "./site-nav";
 
-function FooterCol({ title, items }: { title: string; items: string[] }) {
+type FooterLink = { label: string; to: "/" | "/directory" | "/map" | "/live-status" | "/notices" | "/privacy" | "/terms" };
+
+function FooterCol({ title, items }: { title: string; items: FooterLink[] }) {
   return (
     <div>
       <h4 className="text-sm font-semibold text-foreground">{title}</h4>
       <ul className="mt-4 space-y-3">
         {items.map((i) => (
-          <li key={i}>
-            <a href="#" className="text-sm text-muted-foreground transition hover:text-foreground">
-              {i}
-            </a>
+          <li key={i.label}>
+            <Link
+              to={i.to}
+              className="text-sm text-muted-foreground transition hover:text-foreground"
+            >
+              {i.label}
+            </Link>
           </li>
         ))}
       </ul>
@@ -18,6 +24,17 @@ function FooterCol({ title, items }: { title: string; items: string[] }) {
 }
 
 export function SiteFooter() {
+  const navigation: FooterLink[] = [
+    { label: "Find Teacher", to: "/directory" },
+    { label: "Campus Map", to: "/map" },
+    { label: "Live Status", to: "/live-status" },
+  ];
+  const support: FooterLink[] = [
+    { label: "Help Centre", to: "/map" },
+    { label: "Privacy Policy", to: "/privacy" },
+    { label: "Terms of Service", to: "/terms" },
+  ];
+
   return (
     <footer className="border-t border-border bg-[var(--hero)]">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-16 md:grid-cols-2">
@@ -28,8 +45,8 @@ export function SiteFooter() {
           </p>
         </div>
         <div className="grid grid-cols-2 gap-10">
-          <FooterCol title="Navigation" items={["Find Teacher", "Campus Map", "Live Status"]} />
-          <FooterCol title="Support" items={["Help Centre", "Privacy Policy", "Terms of Service"]} />
+          <FooterCol title="Navigation" items={navigation} />
+          <FooterCol title="Support" items={support} />
         </div>
       </div>
       <div className="border-t border-border/70">
