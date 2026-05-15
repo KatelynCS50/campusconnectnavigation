@@ -9,12 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NoticesRouteImport } from './routes/notices'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as LiveStatusRouteImport } from './routes/live-status'
 import { Route as DirectoryRouteImport } from './routes/directory'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NoticesRoute = NoticesRouteImport.update({
   id: '/notices',
   path: '/notices',
@@ -47,6 +59,8 @@ export interface FileRoutesByFullPath {
   '/live-status': typeof LiveStatusRoute
   '/map': typeof MapRoute
   '/notices': typeof NoticesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +68,8 @@ export interface FileRoutesByTo {
   '/live-status': typeof LiveStatusRoute
   '/map': typeof MapRoute
   '/notices': typeof NoticesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +78,37 @@ export interface FileRoutesById {
   '/live-status': typeof LiveStatusRoute
   '/map': typeof MapRoute
   '/notices': typeof NoticesRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/directory' | '/live-status' | '/map' | '/notices'
+  fullPaths:
+    | '/'
+    | '/directory'
+    | '/live-status'
+    | '/map'
+    | '/notices'
+    | '/privacy'
+    | '/terms'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/directory' | '/live-status' | '/map' | '/notices'
-  id: '__root__' | '/' | '/directory' | '/live-status' | '/map' | '/notices'
+  to:
+    | '/'
+    | '/directory'
+    | '/live-status'
+    | '/map'
+    | '/notices'
+    | '/privacy'
+    | '/terms'
+  id:
+    | '__root__'
+    | '/'
+    | '/directory'
+    | '/live-status'
+    | '/map'
+    | '/notices'
+    | '/privacy'
+    | '/terms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,10 +117,26 @@ export interface RootRouteChildren {
   LiveStatusRoute: typeof LiveStatusRoute
   MapRoute: typeof MapRoute
   NoticesRoute: typeof NoticesRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notices': {
       id: '/notices'
       path: '/notices'
@@ -125,6 +181,8 @@ const rootRouteChildren: RootRouteChildren = {
   LiveStatusRoute: LiveStatusRoute,
   MapRoute: MapRoute,
   NoticesRoute: NoticesRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

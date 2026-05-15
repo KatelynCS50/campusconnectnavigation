@@ -43,7 +43,7 @@ const members: {
   { name: "Liam O'Connor", dept: "Dept. of Science", room: "Physics Lab 210", status: "In Class", initials: "LO", category: "Students", field: "Science" },
 ];
 
-const filters = ["All", "Teachers", "Students", "Science", "Arts"] as const;
+const filters = ["All", "Teachers", "Science", "Arts"] as const;
 type Filter = (typeof filters)[number];
 
 function statusStyles(status: Status) {
@@ -65,7 +65,6 @@ function DirectoryPage() {
     const matchesFilter =
       active === "All" ||
       (active === "Teachers" && m.category === "Teachers") ||
-      (active === "Students" && m.category === "Students") ||
       (active === "Science" && m.field === "Science") ||
       (active === "Arts" && m.field === "Arts");
     const matchesQuery =
@@ -149,18 +148,31 @@ function DirectoryPage() {
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-center gap-3 rounded-2xl bg-secondary px-4 py-3">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-semibold text-foreground/80">{m.room}</span>
-                </div>
+                {m.status === "Available" ? (
+                  <>
+                    <div className="mt-6 flex items-center gap-3 rounded-2xl bg-secondary px-4 py-3">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-semibold text-foreground/80">{m.room}</span>
+                    </div>
 
-                <Link
-                  to="/map"
-                  className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-2xl bg-primary px-5 py-3.5 text-xs font-bold uppercase tracking-widest text-primary-foreground transition hover:opacity-95"
-                >
-                  <Send className="h-4 w-4" />
-                  Click to Navigate
-                </Link>
+                    <Link
+                      to="/map"
+                      className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-2xl bg-primary px-5 py-3.5 text-xs font-bold uppercase tracking-widest text-primary-foreground transition hover:opacity-95"
+                    >
+                      <Send className="h-4 w-4" />
+                      Click to Navigate
+                    </Link>
+                  </>
+                ) : (
+                  <div className="mt-6 rounded-2xl border border-dashed border-border bg-secondary/60 px-4 py-4 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      Location Private
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Available again when {m.name.split(" ")[0]} is free.
+                    </p>
+                  </div>
+                )}
               </article>
             ))}
           </div>
