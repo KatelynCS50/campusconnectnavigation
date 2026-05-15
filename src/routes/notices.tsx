@@ -236,20 +236,20 @@ function NoticesPage() {
               </h3>
               <ul className="mt-5 space-y-5">
                 <li className="flex items-start gap-3">
-                  <Wifi className="mt-0.5 h-4 w-4 text-[var(--emerald)]" />
+                  <Wifi className="mt-0.5 h-4 w-4 text-destructive" />
                   <div>
-                    <p className="text-sm font-bold">Wi-Fi Upgrade</p>
+                    <p className="text-sm font-bold">Library: Closed</p>
                     <p className="text-xs leading-relaxed opacity-75">
-                      Library zone currently offline for speed boost.
+                      Currently closed for maintenance — reopens tomorrow 8 AM.
                     </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Coffee className="mt-0.5 h-4 w-4 text-[oklch(0.78_0.15_70)]" />
+                  <Coffee className="mt-0.5 h-4 w-4 text-[var(--emerald)]" />
                   <div>
-                    <p className="text-sm font-bold">New Café Hours</p>
+                    <p className="text-sm font-bold">Cafeteria: Open</p>
                     <p className="text-xs leading-relaxed opacity-75">
-                      Now open until 10 PM during exam weeks.
+                      Serving lunch until 3 PM, extended hours during exam week.
                     </p>
                   </div>
                 </li>
