@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SymposiumRouteImport } from './routes/symposium'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NoticesRouteImport } from './routes/notices'
 import { Route as MapRouteImport } from './routes/map'
@@ -20,6 +21,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SymposiumRoute = SymposiumRouteImport.update({
+  id: '/symposium',
+  path: '/symposium',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/map': typeof MapRoute
   '/notices': typeof NoticesRoute
   '/privacy': typeof PrivacyRoute
+  '/symposium': typeof SymposiumRoute
   '/terms': typeof TermsRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/map': typeof MapRoute
   '/notices': typeof NoticesRoute
   '/privacy': typeof PrivacyRoute
+  '/symposium': typeof SymposiumRoute
   '/terms': typeof TermsRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/map': typeof MapRoute
   '/notices': typeof NoticesRoute
   '/privacy': typeof PrivacyRoute
+  '/symposium': typeof SymposiumRoute
   '/terms': typeof TermsRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/notices'
     | '/privacy'
+    | '/symposium'
     | '/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/notices'
     | '/privacy'
+    | '/symposium'
     | '/terms'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/notices'
     | '/privacy'
+    | '/symposium'
     | '/terms'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   MapRoute: typeof MapRoute
   NoticesRoute: typeof NoticesRoute
   PrivacyRoute: typeof PrivacyRoute
+  SymposiumRoute: typeof SymposiumRoute
   TermsRoute: typeof TermsRoute
 }
 
@@ -128,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/symposium': {
+      id: '/symposium'
+      path: '/symposium'
+      fullPath: '/symposium'
+      preLoaderRoute: typeof SymposiumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -182,8 +202,19 @@ const rootRouteChildren: RootRouteChildren = {
   MapRoute: MapRoute,
   NoticesRoute: NoticesRoute,
   PrivacyRoute: PrivacyRoute,
+  SymposiumRoute: SymposiumRoute,
   TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
