@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { TeacherAuthProvider } from "@/lib/teacher-auth";
+import { TeacherStatusBar } from "@/components/teacher-status-bar";
 
 function NotFoundComponent() {
   return (
@@ -117,7 +119,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <TeacherAuthProvider>
+        <TeacherStatusBar />
+        <Outlet />
+      </TeacherAuthProvider>
     </QueryClientProvider>
   );
 }
